@@ -1,0 +1,65 @@
+/* src/fifa/fifa-card.css */
+:root{
+  --card-w: 320px; --card-h: 470px; --card-r: 22px; --stroke: 2px;
+  --gold-1:#f6e27a; --gold-2:#d5b66b; --gold-3:#9d7d37;
+  --emerald-1:#00ff90; --emerald-2:#0b8f55; --ink:#030a07;
+}
+@media (max-width: 380px){ :root{ --card-w:290px; --card-h:440px; } }
+
+.fifa-card{
+  width:var(--card-w); height:var(--card-h); position:relative; border-radius:var(--card-r);
+  border:var(--stroke) solid transparent;
+  background:
+    linear-gradient(#0000,#0000) padding-box,
+    linear-gradient(180deg,var(--gold-1),var(--gold-2) 60%,var(--gold-3)) border-box;
+  transform-style:preserve-3d; transform:rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateZ(0);
+  transition:transform .25s ease, filter .25s ease, box-shadow .25s ease;
+  filter:saturate(.95) brightness(.98); outline:none;
+}
+.fifa-card__frame{
+  position:absolute; inset:var(--stroke); border-radius:calc(var(--card-r) - var(--stroke));
+  background:
+    radial-gradient(80% 60% at 50% 18%, rgba(0,255,144,.16), rgba(0,0,0,.08) 70%),
+    linear-gradient(180deg, rgba(11,143,85,.60), rgba(3,10,7,.78) 55%, rgba(3,10,7,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(255,255,255,.03), 0 18px 46px rgba(0,255,144,.18);
+  overflow:hidden;
+}
+.fifa-card__crest{
+  position:absolute; inset:-8% -8% auto auto; width:120px; height:120px;
+  background:url("/palmeiras-crest.svg") center/contain no-repeat;
+  opacity:.12; filter:drop-shadow(0 0 10px rgba(0,255,144,.25)); animation:crestPulse 5.5s ease-in-out infinite;
+}
+@keyframes crestPulse{ 0%,100%{transform:scale(1);opacity:.12} 50%{transform:scale(1.06);opacity:.18} }
+
+.fifa-card__header{
+  position:absolute; top:calc(14px + var(--stroke)); left:calc(16px + var(--stroke)); right:calc(16px + var(--stroke));
+  display:flex; align-items:center; justify-content:space-between; color:#eafff6; text-shadow:0 2px 0 rgba(0,0,0,.35);
+}
+.fifa-card__rating{ font:900 46px/1 ui-sans-serif, system-ui; letter-spacing:-1px; }
+.fifa-card__pos{ font:800 14px/1 ui-sans-serif, system-ui; padding:6px 10px; border-radius:9999px; border:1px solid rgba(0,255,144,.25); background:rgba(0,255,144,.10); color:#eafff6; }
+
+.fifa-card__photoWrap{ position:absolute; inset:var(--stroke); display:grid; place-items:center; }
+.fifa-card__photo{ width:92%; height:auto; object-fit:contain; filter:drop-shadow(0 20px 28px rgba(0,0,0,.45)); transform:translateZ(1px); }
+
+.fifa-card__footer{ position:absolute; left:var(--stroke); right:var(--stroke); bottom:calc(10px + var(--stroke)); display:flex; justify-content:center; }
+.fifa-card__name{
+  color:#eafff6; text-transform:uppercase; font:900 22px/1.1 ui-sans-serif, system-ui; letter-spacing:.6px; text-shadow:0 1px 0 rgba(0,0,0,.35);
+  padding:6px 10px; border-radius:10px; background:linear-gradient(180deg, rgba(0,255,144,.12), rgba(0,0,0,.25)); border:1px solid rgba(0,255,144,.25);
+}
+
+/* Shine interno (não cobre a borda) */
+.fifa-card__frame::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; opacity:0;
+  background:linear-gradient(120deg, rgba(255,255,255,0) 12%, rgba(255,255,255,.45) 32%, rgba(255,255,255,0) 56%);
+  filter:blur(12px); transition:opacity .25s ease; pointer-events:none;
+}
+.fifa-card:hover{ filter:saturate(1.08) brightness(1.03); box-shadow:0 24px 60px rgba(0,255,144,.25); }
+.fifa-card:hover .fifa-card__frame::after{ opacity:.20; }
+
+/* Estado ativo no carrossel */
+.fifa-card.is-active{ transform:scale(1.04) rotateX(var(--rx,0)) rotateY(var(--ry,0)); }
+
+@media (prefers-reduced-motion: reduce){
+  .fifa-card, .fifa-card:hover, .fifa-card.is-active,
+  .fifa-card__frame::after, .fifa-card__crest{ animation:none !important; transition:none !important; }
+}
